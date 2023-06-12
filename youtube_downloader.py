@@ -3,6 +3,8 @@ from tkinter import filedialog
 import yt_dlp as youtube_dl
 import os
 
+print("welcome to alarmingly's Youtube downloader")
+
 def download_video():
     link = link_entry.get()
 
@@ -14,7 +16,10 @@ def download_video():
         'outtmpl': output_directory.get() + '/%(title)s.%(ext)s',
         'format': f'bestvideo[height<={resolution}]+bestaudio/best[height<={resolution}]',
         'merge_output_format': 'mp4',
-        'ffmpeg_location': 'C:/ffmpeg/ffmpeg.exe'  # Custom FFmpeg path
+        'postprocessors': [{
+            'key': 'FFmpegVideoConvertor',
+            'preferedformat': 'mp4',
+        }],
     }
 
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
@@ -40,6 +45,7 @@ def download_audio():
             'preferredcodec': audio_format,
             'preferredquality': '192',
             'nopostoverwrites': False,
+            'audioformat': 'aac',  # Set the desired audio codec here (AAC)
         }],
         'ffmpeg_location': 'C:/ffmpeg/bin/ffmpeg.exe'  # Custom FFmpeg path
     }
@@ -80,7 +86,6 @@ window.geometry("300x300")
 # Output directory
 output_directory = tk.StringVar(value=os.path.expanduser("~/Downloads/yt"))
 
-
 # Download mode variable
 mode_var = tk.StringVar()
 mode_var.set("Video")
@@ -112,8 +117,8 @@ resolution_dropdown = tk.OptionMenu(window, resolution_var, "240", "360", "480",
 
 audio_format_label = tk.Label(window, text="Audio Format:")
 audio_format_var = tk.StringVar()
-audio_format_var.set("mp3")
-audio_format_dropdown = tk.OptionMenu(window, audio_format_var, "mp3", "wav", "m4a")
+audio_format_var.set("aac")
+audio_format_dropdown = tk.OptionMenu(window, audio_format_var, "aac", "mp3", "wav", "m4a")
 
 output_button = tk.Button(window, text="Choose Directory", command=choose_output_directory)
 output_button.pack()
