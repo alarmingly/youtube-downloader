@@ -1,7 +1,7 @@
 # YT Downloader Documentation
 
 ## Important Note
-**WARNING: BUILDS ARE NO LONGER SUPPORTED, USE `launcher.py` INSTEAD**
+**BUILDS ARE NO LONGER SUPPORTED, USE `launcher.py` INSTEAD**
 
 ## Prerequisites
 Before using the YT Downloader, please make sure you have the following:
