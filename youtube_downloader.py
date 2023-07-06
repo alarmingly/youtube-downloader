@@ -3,7 +3,9 @@ from tkinter import filedialog
 import yt_dlp as youtube_dl
 import os
 
-print("welcome to alarmingly's Youtube downloader")
+print("Welcome to alarmingly's YouTube downloader")
+
+resolution_var = None  # Define resolution_var as a global variable
 
 def download_video():
     link = link_entry.get()
@@ -11,10 +13,13 @@ def download_video():
     # Get the selected video resolution
     resolution = resolution_var.get()
 
+    # Remove the 'p' from the resolution to get the actual height value
+    height = int(resolution[:-1])
+
     # Construct the command to download the video
     ydl_opts = {
         'outtmpl': output_directory.get() + '/%(title)s.%(ext)s',
-        'format': f'bestvideo[height<={resolution}]+bestaudio/best[height<={resolution}]',
+        'format': f'bestvideo[height<={height}]+bestaudio/best[height<={height}]',
         'merge_output_format': 'mp4',
         'postprocessors': [{
             'key': 'FFmpegVideoConvertor',
@@ -30,65 +35,25 @@ def download_video():
             status_label.config(text="An error occurred while downloading the video.")
             print(e)
 
-def download_audio():
-    link = link_entry.get()
-
-    # Get the selected audio format
-    audio_format = audio_format_var.get()
-
-    # Construct the command to download the audio
-    ydl_opts = {
-        'outtmpl': output_directory.get() + '/%(title)s.%(ext)s',
-        'format': 'bestaudio/best',
-        'postprocessors': [{
-            'key': 'FFmpegExtractAudio',
-            'preferredcodec': audio_format,
-            'preferredquality': '192',
-            'nopostoverwrites': False,
-            'audioformat': 'aac',  # Set the desired audio codec here (AAC)
-        }],
-        'ffmpeg_location': 'C:/ffmpeg/bin/ffmpeg.exe'  # Custom FFmpeg path
-    }
-
-    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-        try:
-            ydl.download([link])
-            status_label.config(text="Audio downloaded successfully!")
-        except Exception as e:
-            status_label.config(text="An error occurred while downloading the audio.")
-            print(e)
-
 def choose_output_directory():
     # Open a dialog box to choose the output directory
     selected_directory = filedialog.askdirectory()
     if selected_directory:
         output_directory.set(selected_directory)
 
-def update_mode(dummy):
-    # Show or hide the format dropdowns based on the selected mode
-    mode = mode_var.get()
-    if mode == "Video":
-        resolution_label.pack()
-        resolution_dropdown.pack()
-        audio_format_label.pack_forget()
-        audio_format_dropdown.pack_forget()
-    elif mode == "Audio":
-        resolution_label.pack_forget()
-        resolution_dropdown.pack_forget()
-        audio_format_label.pack()
-        audio_format_dropdown.pack()
+def create_output_directory():
+    # Create the output directory if it doesn't exist
+    directory = output_directory.get()
+    if not os.path.exists(directory):
+        os.makedirs(directory)
 
 # Create the main window
 window = tk.Tk()
 window.title("YouTube Downloader")
-window.geometry("300x300")
+window.geometry("300x200")
 
 # Output directory
 output_directory = tk.StringVar(value=os.path.expanduser("~/Downloads/yt"))
-
-# Download mode variable
-mode_var = tk.StringVar()
-mode_var.set("Video")
 
 # Create the widgets
 link_label = tk.Label(window, text="YouTube Link:")
@@ -104,22 +69,6 @@ output_label.pack()
 output_entry = tk.Entry(window, textvariable=output_directory)
 output_entry.pack()
 
-mode_label = tk.Label(window, text="Download Mode:")
-mode_label.pack()
-
-mode_dropdown = tk.OptionMenu(window, mode_var, "Video", "Audio", command=update_mode)
-mode_dropdown.pack()
-
-resolution_label = tk.Label(window, text="Resolution:")
-resolution_var = tk.StringVar()
-resolution_var.set("1080")
-resolution_dropdown = tk.OptionMenu(window, resolution_var, "240", "360", "480", "720", "1080")
-
-audio_format_label = tk.Label(window, text="Audio Format:")
-audio_format_var = tk.StringVar()
-audio_format_var.set("aac")
-audio_format_dropdown = tk.OptionMenu(window, audio_format_var, "aac", "mp3", "wav", "m4a")
-
 output_button = tk.Button(window, text="Choose Directory", command=choose_output_directory)
 output_button.pack()
 
@@ -128,6 +77,17 @@ download_button.pack()
 
 status_label = tk.Label(window, text="")
 status_label.pack()
+
+# Create the output directory if it doesn't exist
+create_output_directory()
+
+# Resolution variable
+resolution_label = tk.Label(window, text="Resolution:")
+resolution_var = tk.StringVar()
+resolution_var.set("1080p")
+resolution_dropdown = tk.OptionMenu(window, resolution_var, "240p", "360p", "480p", "720p", "1080p")
+resolution_label.pack()
+resolution_dropdown.pack()
 
 # Start the GUI event loop
 window.mainloop()
