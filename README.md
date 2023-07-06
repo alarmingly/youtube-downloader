@@ -14,20 +14,16 @@ The YT Downloader saves downloaded videos in the following directory by default:
 
 `<user>/downloads/yt`
 
-Please note that you can change the default save location by modifying the appropriate settings in the YT Downloader application.
-
 ## Limitations
 The current version of the YT Downloader only supports downloading videos. Support for downloading other media types may be added in future updates.
 
 ## Installation Instructions
 To install and run the YT Downloader, follow these steps:
 
-1. Open a command prompt or terminal.
-2. Navigate to the directory where the YT Downloader files are located.
-3. Run `launcher.py`.
-4. The launcher will automatically install any necessary dependencies and execute the YT Downloader application.
+1. Run `launcher.py`.
+2. The launcher will automatically install any necessary dependencies and execute the YT Downloader application.
 
-Please ensure that you have an active internet connection during the installation process.
+Please ensure that you have an active internet connection.
 
 ## Usage
 Once the YT Downloader is installed, you can use it to download videos from YouTube by following these steps:
