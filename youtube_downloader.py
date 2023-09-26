@@ -114,7 +114,7 @@ resolution_label.pack()
 resolution_dropdown.pack()
 
 # Audio format variable
-audio_label = tk.Label(window, text="Audio Format:")
+audio_label = tk.Label(window, text="Format:")
 audio_var = tk.StringVar()
 audio_var.set("mp4")
 audio_dropdown = tk.OptionMenu(window, audio_var, "mp3", "mp4")
