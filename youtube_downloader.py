@@ -6,6 +6,8 @@ import os
 print("Welcome to alarmingly's YouTube downloader")
 
 resolution_var = None  # Define resolution_var as a global variable
+audio_var = None       # Define audio_var as a global variable
+subtitles_var = None   # Define subtitles_var as a global variable
 
 def download_video():
     link = link_entry.get()
@@ -16,16 +18,41 @@ def download_video():
     # Remove the 'p' from the resolution to get the actual height value
     height = int(resolution[:-1])
 
-    # Construct the command to download the video
-    ydl_opts = {
-        'outtmpl': output_directory.get() + '/%(title)s.%(ext)s',
-        'format': f'bestvideo[height<={height}]+bestaudio/best[height<={height}]',
-        'merge_output_format': 'mp4',
-        'postprocessors': [{
-            'key': 'FFmpegVideoConvertor',
-            'preferedformat': 'mp4',
-        }],
-    }
+    # Get the selected audio format
+    audio_format = audio_var.get()
+
+    # Check if subtitles checkbox is selected
+    subtitles = subtitles_var.get()
+    subtitle_args = ""
+    if subtitles:
+        subtitle_args = "--write-sub --write-auto-sub --sub-lang en.*"
+
+    # Construct the command to download the video or audio
+    if audio_format == "mp3":
+        ydl_opts = {
+            'format': 'bestaudio/best',
+            'postprocessors': [{
+                'key': 'FFmpegExtractAudio',
+                'preferredcodec': 'mp3',
+            }],
+            'extractaudio': True,
+            'outtmpl': output_directory.get() + '/%(title)s.%(ext)s',
+        }
+    else:
+        ydl_opts = {
+            'outtmpl': output_directory.get() + '/%(title)s.%(ext)s',
+            'format': f'bestvideo[height<={height}]+bestaudio/best[height<={height}]',
+            'merge_output_format': 'mp4',
+            'postprocessors': [{
+                'key': 'FFmpegVideoConvertor',
+                'preferedformat': 'mp4',
+            }],
+            'subtitleslangs': subtitle_args,
+        }
+
+    # Print the command
+    print("Downloading command:")
+    print(ydl_opts)
 
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
         try:
@@ -50,7 +77,7 @@ def create_output_directory():
 # Create the main window
 window = tk.Tk()
 window.title("YouTube Downloader")
-window.geometry("300x200")
+window.geometry("400x250")
 
 # Output directory
 output_directory = tk.StringVar(value=os.path.expanduser("~/Downloads/yt"))
@@ -78,9 +105,6 @@ download_button.pack()
 status_label = tk.Label(window, text="")
 status_label.pack()
 
-# Create the output directory if it doesn't exist
-create_output_directory()
-
 # Resolution variable
 resolution_label = tk.Label(window, text="Resolution:")
 resolution_var = tk.StringVar()
@@ -88,6 +112,22 @@ resolution_var.set("1080p")
 resolution_dropdown = tk.OptionMenu(window, resolution_var, "240p", "360p", "480p", "720p", "1080p")
 resolution_label.pack()
 resolution_dropdown.pack()
+
+# Audio format variable
+audio_label = tk.Label(window, text="Audio Format:")
+audio_var = tk.StringVar()
+audio_var.set("mp4")
+audio_dropdown = tk.OptionMenu(window, audio_var, "mp3", "mp4")
+audio_label.pack()
+audio_dropdown.pack()
+
+# Subtitles checkbox
+subtitles_var = tk.BooleanVar()
+subtitles_checkbox = tk.Checkbutton(window, text="Subtitles", variable=subtitles_var)
+subtitles_checkbox.pack()
+
+# Create the output directory if it doesn't exist
+create_output_directory()
 
 # Start the GUI event loop
 window.mainloop()
