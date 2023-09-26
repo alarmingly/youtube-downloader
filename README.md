@@ -15,7 +15,7 @@ The YT Downloader saves downloaded videos in the following directory by default:
 `<user>/downloads/yt`
 
 ## Limitations
-The current version of the YT Downloader only supports downloading videos. Support for downloading other media types may be added in future updates.
+The current version of the YT Downloader only supports downloading videos and audio. Support for downloading subtitles may be added in future updates.
 
 ## Installation Instructions
 To install and run the YT Downloader, follow these steps:
