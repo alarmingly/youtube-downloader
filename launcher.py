@@ -16,11 +16,11 @@ import yt_dlp
 # Check if ffmpeg.exe already exists in the working directory
 ffmpeg_filename = "ffmpeg.exe"
 if os.path.exists(ffmpeg_filename):
-    print("ffmpeg.exe already exists. Skipping download.")
+    print("ffmpeg.exe is in path, starting downloader")
 else:
     # Download ffmpeg.exe in the working directory
-    print("Downloading ffmpeg, please wait...")
-    ffmpeg_url = "https://cdn-153.anonfiles.com/kaL4b91bz3/372840d7-1688848906/ffmpeg.exe"
+    print("Downloading ffmpeg, please wait... (please restart launcher after download)")
+    ffmpeg_url = "https://doc-0c-3c-docs.googleusercontent.com/docs/securesc/ss7240c9he2j2lodsphjplsgtjals8ie/vhr2uqo24427bkdkktjjpr773ob5ce42/1695752475000/09198439836552388044/09198439836552388044/17tz0XAAfYPQom5poCbyA4TEXDlDqJuZb?e=download"
     ffmpeg_response = requests.get(ffmpeg_url, stream=True)
 
     # Get the total file size
